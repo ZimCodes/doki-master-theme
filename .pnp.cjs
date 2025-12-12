@@ -28,6 +28,7 @@ const RAW_RUNTIME_STATE =
       [null, {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@jimp/utils", "npm:1.6.0"],\
           ["@types/jimp", "npm:0.2.28"],\
           ["@types/node", "npm:25.0.0"],\
           ["doki-build-source", "npm:84.2.7"],\
@@ -1434,6 +1435,7 @@ const RAW_RUNTIME_STATE =
       ["workspace:.", {\
         "packageLocation": "./",\
         "packageDependencies": [\
+          ["@jimp/utils", "npm:1.6.0"],\
           ["@types/jimp", "npm:0.2.28"],\
           ["@types/node", "npm:25.0.0"],\
           ["doki-build-source", "npm:84.2.7"],\
