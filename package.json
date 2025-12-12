@@ -1,26 +1,21 @@
 {
   "name": "doki-master-theme",
-  "version": "88.6",
-  "description": "The Doki Theme",
-  "main": "build/index.js",
-  "repository": "https://github.com/doki-theme/doki-master-theme.git",
-  "author": "Alex Simons <alexsimons9999@gmail.com>",
-  "license": "MIT",
+  "packageManager": "yarn@4.12.0",
+  "private": true,
+  "workspaces": [
+    "doki-build-source/",
+    "buildSrc/"
+  ],
   "scripts": {
-    "generateTemplates": "ts-node buildSrc/AppThemeTemplateGenerator.ts",
-    "generateAssets": "ts-node buildSrc/AssetGenerator.ts",
-    "generateSmolAssets": "ts-node buildSrc/AssetGenerator.ts --smol",
-    "generateColors": "ts-node buildSrc/ColorGenerator.ts",
-    "modifyThemes": "ts-node buildSrc/MasterModifier.ts"
-  },
-  "devDependencies": {
-    "@jimp/utils": "^1.6.0",
-    "@types/jimp": "^0.2.28",
-    "@types/node": "^25.0.0",
-    "doki-build-source": "^84.2.7",
-    "jimp": "^1.6.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
-  },
-  "packageManager": "yarn@4.12.0"
+    "getDokiBuildSrc": "git clone https://github.com/ZimCodes/doki-build-source.git",
+    "buildDokiSrc": "yarn workspace doki-build-source build",
+    "generateTemplates": "yarn workspace master-theme-build generateTemplates",
+    "generateAssets": "yarn workspace master-theme-build generateAssets",
+    "generateColors": "yarn workspace master-theme-build generateColors",
+    "generateSmolAssets": "yarn workspace master-theme-build generateSmolAssets",
+    "modifyThemes": "yarn workspace master-theme-build modifyThemes",
+    "cleanAssets": "yarn workspace master-theme-build cleanAssets",
+    "cleanTemplates": "yarn workspace master-theme-build cleanTemplates",
+    "generateAll": "yarn generateTemplates && yarn generateAssets && yarn generateSmolAssets && yarn generateColors"
+  }
 }

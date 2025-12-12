@@ -1,0 +1,28 @@
+{
+  "name": "master-theme-build",
+  "version": "88.6",
+  "description": "The Doki Theme",
+  "main": "build/index.js",
+  "repository": "https://github.com/doki-theme/doki-master-theme.git",
+  "author": "Alex Simons <alexsimons9999@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "generateTemplates": "tsx AppThemeTemplateGenerator.ts",
+    "generateAssets": "tsx AssetGenerator.ts",
+    "generateSmolAssets": "tsx AssetGenerator.ts --smol",
+    "generateColors": "tsx ColorGenerator.ts",
+    "modifyThemes": "tsx MasterModifier.ts",
+    "cleanAssets": "rimraf ../../../doki-theme-assets",
+    "cleanTemplates": "rimraf ../buildSrc"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.1",
+    "doki-build-source": "workspace:*",
+    "rimraf": "^6.1.2",
+    "sharp": "^0.34.5",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "yarn@4.12.0"
+}

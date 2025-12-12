@@ -33,3 +33,6 @@ src/test/resources/
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+
+# Doki Build Source
+doki-build-source/

@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import { walkAndBuildTemplates } from "./BuildFunctions";
 import { MasterDokiThemeDefinition } from "doki-build-source";
 

@@ -1,20 +1,19 @@
-import path from "path";
-import fs from "fs";
-import {Jimp} from "jimp";
-import {cssColorToHex} from "@jimp/utils";
+import path from "node:path";
+import fs from "node:fs";
 import {masterThemeDefinitionDirectoryPath, masterThemesDirectory, walkAndBuildTemplates,} from "./BuildFunctions";
+import sharp from "sharp";
 
 function buildBlankAsset(backgroundDirectory: string): Promise<void> {
-    const highlightColor = cssColorToHex("#00000000");
     return new Promise<void>((resolve, reject) => {
-        const image = new Jimp({width: 300, height: 120});
-        for (let i = 0; i < 33; i++) {
-            for (let j = 0; j < 300; j++) {
-                image.setPixelColor(highlightColor, j, i);
+        const img = sharp({
+            create: {
+                width: 300,
+                height: 120,
+                channels: 4,
+                background: {r: 0, g: 0, b: 0, alpha: 1.0}
             }
-        }
-        const fileName = getFormattedName(backgroundDirectory);
-        resolve(image.write(fileName));
+        });
+        resolve(img.toFile(backgroundDirectory));
     });
 }
 
@@ -34,13 +33,6 @@ function createAsset(assetPath: string): Promise<void> {
     }
 }
 
-function getFormattedName(filePath: string): `${string}.${string}` {
-    const dirPath: string = path.dirname(filePath);
-    const extension: string = path.extname(filePath);
-    const fileName: string = path.basename(filePath, extension);
-    return `${path.join(dirPath,fileName)}.${extension.substring(1)}`;
-}
-
 const createSmolAsset = (
     stickerPath: string,
     smolStickerPath: string
@@ -49,17 +41,14 @@ const createSmolAsset = (
         recursive: true,
     });
     return new Promise((resolve, reject) => {
-        Jimp.read(stickerPath).then((img)=>{
+        const img = sharp(smolStickerPath);
+        img.metadata().then((metadata) => {
+            const newHeight = metadata.width > metadata.height ? (metadata.height / metadata.width) * 150 : 150;
+            const newWidth = metadata.height > metadata.width ? (metadata.width / metadata.height) * 150 : 150;
             console.log(`Read sticker ${stickerPath}`);
-            const width = img.width;
-            const height = img.height;
-            const newHeight = width > height ? (height / width) * 150 : 150;
-            const newWidth = height > width ? (width / height) * 150 : 150;
-            img.resize({w: newWidth, h: newHeight});
-            const fileName = getFormattedName(smolStickerPath);
-            resolve(img.write(fileName));
+            img.resize({width: newWidth, height: newHeight});
+            resolve(img.toFile(smolStickerPath));
             console.log(`Successfully smolified ${stickerPath}`);
-
         });
     });
 };
@@ -74,27 +63,25 @@ const createSmolWallpaper = (
         recursive: true,
     });
     return new Promise((resolve, reject) => {
-        Jimp.read(transparentWallpaperPath).then((img) => {
-                console.log(`Read wallpaper ${transparentWallpaperPath}`);
-                const width = img.width;
-                const height = img.height;
-                if (width <= 1920) {
-                    console.log(`Didn't need to do anything for ${transparentWallpaperPath}`);
-                    fs.copyFileSync(
-                        transparentWallpaperPath, smolWallpaperPath
-                    );
-                    resolve();
-                } else {
-                    const newWidth = 1920;
-                    const newHeight = 1920 * (height / width);
-                    img.resize({w: newWidth, h: newHeight});
-                    const fileName = getFormattedName(smolWallpaperPath);
-                    resolve(img.write(fileName));
-                    console.log(`Successfully smolified ${transparentWallpaperPath}`);
-                }
+        const img = sharp(transparentWallpaperPath);
+        img.metadata().then((metadata) => {
+            console.log(`Read wallpaper ${transparentWallpaperPath}`);
+            const width = metadata.width;
+            const height = metadata.height;
+            if (width <= 1920) {
+                console.log(`Didn't need to do anything for ${transparentWallpaperPath}`);
+                fs.copyFileSync(
+                    transparentWallpaperPath, smolWallpaperPath
+                );
+                resolve();
+            } else {
+                const newWidth = 1920;
+                const newHeight = 1920 * (height / width);
+                img.resize({width: newWidth, height: newHeight});
+                resolve(img.toFile(smolWallpaperPath));
+                console.log(`Successfully smolified ${transparentWallpaperPath}`);
             }
-        )
-        ;
+        });
     });
 };
 

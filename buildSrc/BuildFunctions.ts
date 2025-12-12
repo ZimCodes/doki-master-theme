@@ -3,7 +3,7 @@ import {
   readJson,
   walkDir,
 } from "doki-build-source";
-import path from "path";
+import path from "node:path";
 
 export const masterThemesDirectory = path.resolve(__dirname, "..");
 
