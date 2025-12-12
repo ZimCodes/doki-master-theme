@@ -141,7 +141,7 @@ walkAndBuildTemplates()
               destinationPath.substr(0, destinationPath.lastIndexOf(path.sep) + 1) +
               stickerName;
 
-            // create all of the necessary sticker assets
+            // creates all necessary sticker assets
             return Promise.all(
               [["jetbrains", "v2"], ["vscode"]].map((directories) => {
                 const fullStickerPath = path.join(

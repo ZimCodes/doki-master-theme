@@ -25,3 +25,11 @@ classes/
 #gradle.properties
 *.icls
 src/test/resources/
+
+# Yarn
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
