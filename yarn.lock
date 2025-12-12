@@ -538,9 +538,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"doki-build-source@workspace:*, doki-build-source@workspace:doki-build-source":
+"doki-build-source@workspace:*, doki-build-source@workspace:../doki-build-source":
   version: 0.0.0-use.local
-  resolution: "doki-build-source@workspace:doki-build-source"
+  resolution: "doki-build-source@workspace:../doki-build-source"
   dependencies:
     "@types/node": "npm:^25.0.1"
     typescript: "npm:^5.9.3"

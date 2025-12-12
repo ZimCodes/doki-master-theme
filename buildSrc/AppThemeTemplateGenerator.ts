@@ -128,7 +128,7 @@ walkAndBuildTemplates()
     const themeDirectory = path.resolve(
       masterThemesDirectory,
       "..",
-      "buildSrc",
+      "doki-build-plugin",
       "assets",
       "themes"
     );
@@ -136,7 +136,7 @@ walkAndBuildTemplates()
     dokiThemes.forEach((dokiTheme) => {
       const { dokiFileDefinitionPath, dokiThemeDefinition } = dokiTheme;
 
-      const destinationPath = dokiFileDefinitionPath.substr(
+      const destinationPath = dokiFileDefinitionPath.substring(
         masterThemeDefinitionDirectoryPath.length
       );
       const essentials = buildApplicationTemplate(dokiThemeDefinition);

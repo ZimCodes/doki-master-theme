@@ -106,11 +106,11 @@ walkAndBuildTemplates()
                 (accum, dokiTheme) =>
                     accum.then(() => {
                         const {dokiFileDefinitionPath, stickerName} = dokiTheme;
-                        const destinationPath = dokiFileDefinitionPath.substr(
+                        const destinationPath = dokiFileDefinitionPath.substring(
                             masterThemeDefinitionDirectoryPath.length
                         );
                         const stickerPath =
-                            destinationPath.substr(0, destinationPath.lastIndexOf(path.sep) + 1) +
+                            destinationPath.substring(0, destinationPath.lastIndexOf(path.sep) + 1) +
                             stickerName;
 
                         // creates all necessary sticker assets

@@ -8,7 +8,7 @@ type RGBArray = [number, number, number, number];
 
 function hex_to_rgba(a: string): RGBArray {
   '#' == a[0] && (a = a.substring(1));
-  6 > a.length && (a += '000000'.substr(0, 6 - a.length));
+  6 > a.length && (a += '000000'.substring(0, 6 - a.length));
   return [parseInt(a.substring(0, 2), 16),
     parseInt(a.substring(2, 4), 16),
     parseInt(a.substring(4, 6), 16),
@@ -18,7 +18,7 @@ function hex_to_rgba(a: string): RGBArray {
 
 function rgb_to_hex(a: RGBArray) {
   const b = (a[2] | a[1] << 8 | a[0] << 16).toString(16);
-  return '000000'.substr(0, 6 - b.length) + b;
+  return '000000'.substring(0, 6 - b.length) + b;
 }
 
 function blendColors(
