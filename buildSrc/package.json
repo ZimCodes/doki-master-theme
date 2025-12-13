@@ -8,7 +8,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "generateTemplates": "tsx AppThemeTemplateGenerator.ts",
+    "generateIconsTemplates": "tsx AppThemeTemplateGenerator.ts --icons",
+    "generateJetbrainsTemplates": "tsx AppThemeTemplateGenerator.ts",
     "generateAssets": "tsx AssetGenerator.ts",
     "generateSmolAssets": "tsx AssetGenerator.ts --smol",
     "generateColors": "tsx ColorGenerator.ts",

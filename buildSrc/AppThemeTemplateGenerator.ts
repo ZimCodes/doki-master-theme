@@ -2,6 +2,7 @@ import {MasterDokiThemeDefinition,} from "doki-build-source";
 import path from "node:path";
 import fs from "node:fs";
 import {masterThemeDefinitionDirectoryPath, masterThemesDirectory, walkAndBuildTemplates} from "./BuildFunctions";
+import process from "node:process"
 
 const jetbrainsTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
   id: dokiThemeDefinition.id,
@@ -116,7 +117,20 @@ function buildApplicationTemplate(
  * You also want to change this as well
  *  jetbrains | vsCode | hyper | chrome | vim | github | eclipse | jupyter | home | visualstudio | firefox | icons
  */
-const appName = 'jetbrains';
+const definitionEnum = Object.freeze({
+  "--icons": "icons",
+  "--vscode": "vsCode",
+  "--hyper": "hyper",
+  "--chrome": "chrome",
+  "--vim": "vim",
+  "--github": "github",
+  "--eclipse": "eclipse",
+  "--jupyter": "jupyter",
+  "--home": "home",
+  "--vsstudio": "visualstudio",
+  "--firefox": "firefox"
+});
+const appName = definitionEnum[process.argv[2]] || 'jetbrains';
 
 /**************************************************************************/
 

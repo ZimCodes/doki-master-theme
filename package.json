@@ -10,13 +10,15 @@
   "scripts": {
     "getDokiBuildSrc": "git clone https://github.com/ZimCodes/doki-build-source.git",
     "buildDokiSrc": "yarn workspace doki-build-source build",
-    "generateTemplates": "yarn workspace master-theme-build generateTemplates",
+    "generateIconsTemplates": "yarn workspace master-theme-build generateIconsTemplates",
+    "generateJetbrainsTemplates": "yarn workspace master-theme-build generateJetbrainsTemplates",
     "generateAssets": "yarn workspace master-theme-build generateAssets",
     "generateColors": "yarn workspace master-theme-build generateColors",
     "generateSmolAssets": "yarn workspace master-theme-build generateSmolAssets",
     "modifyThemes": "yarn workspace master-theme-build modifyThemes",
     "cleanAssets": "yarn workspace master-theme-build cleanAssets",
     "cleanTemplates": "yarn workspace master-theme-build cleanTemplates",
-    "generateAll": "yarn generateTemplates && yarn generateSmolAssets && yarn generateColors"
+    "generateAllIcons": "yarn generateIconsTemplates && yarn generateSmolAssets && yarn generateColors",
+    "generateAllJetbrains": "yarn generateJetbrainsTemplates && yarn generateSmolAssets && yarn generateColors"
   }
 }
