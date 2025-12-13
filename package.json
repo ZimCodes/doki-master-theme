@@ -18,7 +18,7 @@
     "modifyThemes": "yarn workspace master-theme-build modifyThemes",
     "cleanAssets": "yarn workspace master-theme-build cleanAssets",
     "cleanTemplates": "yarn workspace master-theme-build cleanTemplates",
-    "generateAllIcons": "yarn generateIconsTemplates && yarn generateSmolAssets && yarn generateColors",
+    "generateAllIcons": "yarn generateIconsTemplates && yarn generateColors",
     "generateAllJetbrains": "yarn generateJetbrainsTemplates && yarn generateSmolAssets && yarn generateColors"
   }
 }
