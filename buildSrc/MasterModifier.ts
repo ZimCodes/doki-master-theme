@@ -23,5 +23,5 @@ walkAndBuildTemplates()
       );
   })
   .then(() => {
-    console.log("Color Creation Complete!");
+    console.log("Modification Complete!");
   });
