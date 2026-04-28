@@ -6,7 +6,7 @@ To generate a different type of template, `${appName}.${type}.definition.json`, 
 **Usage**
 
 ```commandline
-tsx AppThemeTemplateGenerator.ts --vscode
+yarn dlx tsx AppThemeTemplateGenerator.ts --vscode
 ```
 
 |      Options       |

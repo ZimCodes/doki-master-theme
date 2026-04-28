@@ -1,6 +1,6 @@
 {
   "name": "doki-master-theme",
-  "packageManager": "yarn@4.13.0",
+  "packageManager": "yarn@4.14.1",
   "private": true,
   "workspaces": [
     "doki-build-source/",
@@ -19,6 +19,7 @@
     "cleanAssets": "yarn workspace master-theme-build cleanAssets",
     "cleanTemplates": "yarn workspace master-theme-build cleanTemplates",
     "generateAllIcons": "yarn generateIconsTemplates && yarn generateColors",
-    "generateAllJetbrains": "yarn generateJetbrainsTemplates && yarn generateColors && yarn generateSmolAssets"
+    "generateAllJetbrains": "yarn generateJetbrainsTemplates && yarn generateColors && yarn generateSmolAssets",
+    "generateAllJetbrainsAndIcons": "yarn generateJetbrainsTemplates && yarn generateIconsTemplates && yarn generateColors && yarn generateSmolAssets"
   }
 }
