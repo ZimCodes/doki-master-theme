@@ -99,39 +99,63 @@ const homeTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
 /*********************************************************************************************/
 
 /**
- * This Function creates each application specific template and puts it in the "buildSrc/assets/templates
- * of the current app"
+ * This function creates each application specific template and puts it in the
+ * "{buildSrc,doki-build-plugin}/assets/templates" of the current app.
  *
  * This is most handy when creating the doki theme for a new application as it preserves the
  * folder structure, which is not important, but it is nice.
  *
+ * @param appArg
  * @param dokiThemeDefinition
  */
-function buildApplicationTemplate(
-  dokiThemeDefinition: MasterDokiThemeDefinition
-) {
-  return jetbrainsTemplate(dokiThemeDefinition);
+function buildApplicationTemplate(appArg: string, dokiThemeDefinition: MasterDokiThemeDefinition) {
+  switch (appArg) {
+    case '--icons':
+      return {name: 'icons', template: iconsTemplate(dokiThemeDefinition)};
+    case '--vscode':
+      return {name: 'vsCode', template: vsCodeTemplate(dokiThemeDefinition)};
+    case '--hyper':
+      return {name: 'hyper', template: hyperTemplate(dokiThemeDefinition)};
+    case '--chrome':
+      return {name: 'chrome', template: chromeTemplate(dokiThemeDefinition)};
+    case '--vim':
+      return {name: 'vim', template: vimTemplate(dokiThemeDefinition)};
+    case '--github':
+      return {name: 'github', template: githubTemplate(dokiThemeDefinition)};
+    case '--eclipse':
+      return {name: 'eclipse', template: githubTemplate(dokiThemeDefinition)};
+    case '--jupyter':
+      return {name: 'jupyter', template: jupyterTemplate(dokiThemeDefinition)};
+    case '--home':
+      return {name: 'home', template: homeTemplate(dokiThemeDefinition)};
+    case '--vsstudio':
+      return {name: 'visualstudio', template: visualStudioTemplate(dokiThemeDefinition)};
+    case '--firefox':
+      return {name: 'firefox', template: firefoxTemplate(dokiThemeDefinition)};
+    default:
+      return {name: 'jetbrains', template: jetbrainsTemplate(dokiThemeDefinition)};
+  }
 }
 
 /**
  * You also want to change this as well
  *  jetbrains | vsCode | hyper | chrome | vim | github | eclipse | jupyter | home | visualstudio | firefox | icons
  */
-const definitionEnum = Object.freeze({
-  "--icons": "icons",
-  "--vscode": "vsCode",
-  "--hyper": "hyper",
-  "--chrome": "chrome",
-  "--vim": "vim",
-  "--github": "github",
-  "--eclipse": "eclipse",
-  "--jupyter": "jupyter",
-  "--home": "home",
-  "--vsstudio": "visualstudio",
-  "--firefox": "firefox"
-});
-const appName = definitionEnum[process.argv[2]] || 'jetbrains';
+const appArg = process.argv[2];
 
+function getThemeDirectoryPath(appArg: string) {
+  let parentDirName: string = 'buildSrc';
+  if (!appArg || appArg == '--icons') {
+    parentDirName = 'doki-build-plugin';
+  }
+  return path.resolve(
+    masterThemesDirectory,
+    "..",
+    parentDirName,
+    "assets",
+    "themes"
+  );
+}
 /**************************************************************************/
 
 
@@ -139,21 +163,14 @@ console.log("Preparing to generate theme templates.");
 
 walkAndBuildTemplates()
   .then((dokiThemes) => {
-    const themeDirectory = path.resolve(
-      masterThemesDirectory,
-      "..",
-      "doki-build-plugin",
-      "assets",
-      "themes"
-    );
-
+    const themeDirectory = getThemeDirectoryPath(appArg);
     dokiThemes.forEach((dokiTheme) => {
-      const { dokiFileDefinitionPath, dokiThemeDefinition } = dokiTheme;
+      const {dokiFileDefinitionPath, dokiThemeDefinition} = dokiTheme;
 
       const destinationPath = dokiFileDefinitionPath.substring(
         masterThemeDefinitionDirectoryPath.length
       );
-      const essentials = buildApplicationTemplate(dokiThemeDefinition);
+      const {name: appName, template: essentials} = buildApplicationTemplate(appArg, dokiThemeDefinition);
 
       const fullFilePath = path.join(themeDirectory, destinationPath);
 
@@ -186,7 +203,7 @@ walkAndBuildTemplates()
   });
 
 function getExistingAppDefinition(appTemplateDefinition: string) {
-  if(fs.existsSync(appTemplateDefinition)) {
+  if (fs.existsSync(appTemplateDefinition)) {
     return JSON.parse(fs.readFileSync(appTemplateDefinition, {encoding: 'utf-8'}));
   }
 
