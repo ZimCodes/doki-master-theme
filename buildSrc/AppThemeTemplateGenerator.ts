@@ -156,6 +156,7 @@ function getThemeDirectoryPath(appArg: string) {
     "themes"
   );
 }
+
 /**************************************************************************/
 
 
@@ -180,7 +181,7 @@ walkAndBuildTemplates()
 
       const appTemplateDefinition = fullFilePath.replace(
         "master.definition",
-        `${appName}.definition`
+        getAppDefinitionName(appName)
       );
       const previousAppTemplateDefinition = getExistingAppDefinition(
         appTemplateDefinition
@@ -201,6 +202,15 @@ walkAndBuildTemplates()
   .then(() => {
     console.log("Theme Template Generation Complete!");
   });
+
+function getAppDefinitionName(appName: string): string {
+  switch (appName) {
+    case "jetbrains":
+      return `darcula.${appName}.definition`;
+    default:
+      return `${appName}.definition`
+  }
+}
 
 function getExistingAppDefinition(appTemplateDefinition: string) {
   if (fs.existsSync(appTemplateDefinition)) {
