@@ -3,8 +3,19 @@ import path from "node:path";
 import fs from "node:fs";
 import {masterThemeDefinitionDirectoryPath, masterThemesDirectory, walkAndBuildTemplates} from "./BuildFunctions";
 import process from "node:process"
+import url from "node:url"
 
-const jetbrainsTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
+const __filename = url.fileURLToPath(import.meta.url);
+
+function hasExecutedScript(): boolean {
+  try {
+    return process.argv[1] && path.resolve(process.argv[1]) === __filename;
+  } catch (e) {
+    return false;
+  }
+}
+
+export const jetbrainsTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
   id: dokiThemeDefinition.id,
   editorScheme: {
     type: "template",
@@ -159,50 +170,6 @@ function getThemeDirectoryPath(appArg: string) {
 
 /**************************************************************************/
 
-
-console.log("Preparing to generate theme templates.");
-
-walkAndBuildTemplates()
-  .then((dokiThemes) => {
-    const themeDirectory = getThemeDirectoryPath(appArg);
-    dokiThemes.forEach((dokiTheme) => {
-      const {dokiFileDefinitionPath, dokiThemeDefinition} = dokiTheme;
-
-      const destinationPath = dokiFileDefinitionPath.substring(
-        masterThemeDefinitionDirectoryPath.length
-      );
-      const {name: appName, template: essentials} = buildApplicationTemplate(appArg, dokiThemeDefinition);
-
-      const fullFilePath = path.join(themeDirectory, destinationPath);
-
-      fs.mkdirSync(path.resolve(fullFilePath, ".."), {
-        recursive: true,
-      });
-
-      const appTemplateDefinition = fullFilePath.replace(
-        "master.definition",
-        getAppDefinitionName(appName)
-      );
-      const previousAppTemplateDefinition = getExistingAppDefinition(
-        appTemplateDefinition
-      );
-
-      const definitionAsString = JSON.stringify(
-        {
-          ...essentials,
-          ...previousAppTemplateDefinition,
-        },
-        null,
-        2
-      );
-
-      fs.writeFileSync(appTemplateDefinition, definitionAsString);
-    });
-  })
-  .then(() => {
-    console.log("Theme Template Generation Complete!");
-  });
-
 function getAppDefinitionName(appName: string): string {
   switch (appName) {
     case "jetbrains":
@@ -219,3 +186,51 @@ function getExistingAppDefinition(appTemplateDefinition: string) {
 
   return {}
 }
+
+
+function run() {
+  if (!hasExecutedScript()) return;
+  console.log("Preparing to generate theme templates.");
+  walkAndBuildTemplates()
+    .then((dokiThemes) => {
+      const themeDirectory = getThemeDirectoryPath(appArg);
+      dokiThemes.forEach((dokiTheme) => {
+        const {dokiFileDefinitionPath, dokiThemeDefinition} = dokiTheme;
+
+        const destinationPath = dokiFileDefinitionPath.substring(
+          masterThemeDefinitionDirectoryPath.length
+        );
+        const {name: appName, template: essentials} = buildApplicationTemplate(appArg, dokiThemeDefinition);
+
+        const fullFilePath = path.join(themeDirectory, destinationPath);
+
+        fs.mkdirSync(path.resolve(fullFilePath, ".."), {
+          recursive: true,
+        });
+
+        const appTemplateDefinition = fullFilePath.replace(
+          "master.definition",
+          getAppDefinitionName(appName)
+        );
+        const previousAppTemplateDefinition = getExistingAppDefinition(
+          appTemplateDefinition
+        );
+
+        const definitionAsString = JSON.stringify(
+          {
+            ...essentials,
+            ...previousAppTemplateDefinition,
+          },
+          null,
+          2
+        );
+
+        fs.writeFileSync(appTemplateDefinition, definitionAsString);
+      });
+    })
+    .then(() => {
+      console.log("Theme Template Generation Complete!");
+    });
+}
+
+run();

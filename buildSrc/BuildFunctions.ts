@@ -13,18 +13,11 @@ export const masterThemeDefinitionDirectoryPath = path.resolve(
 );
 
 
-export function walkAndBuildTemplates() {
-  return walkDir(masterThemeDefinitionDirectoryPath)
-    .then((files) => files.filter((file) => file.endsWith("master.definition.json"))
-    )
-    .then((dokiFileDefinitionPaths) => {
-      return {
-        dokiFileDefinitionPaths,
-      };
-    })
+export function walkAndBuildTemplates(themeDefinitionDirPath = masterThemeDefinitionDirectoryPath) {
+  return walkDir(themeDefinitionDirPath)
+    .then((files) => files.filter((file) => file.endsWith("master.definition.json")))
     .then((templatesAndDefinitions) => {
-      const { dokiFileDefinitionPaths } = templatesAndDefinitions;
-      return dokiFileDefinitionPaths.map((dokiFileDefinitionPath) => ({
+      return templatesAndDefinitions.map((dokiFileDefinitionPath) => ({
         dokiFileDefinitionPath,
         dokiThemeDefinition: readJson<MasterDokiThemeDefinition>(
           dokiFileDefinitionPath
