@@ -134,7 +134,7 @@ function buildApplicationTemplate(appArg: string, dokiThemeDefinition: MasterDok
     case '--github':
       return {name: 'github', template: githubTemplate(dokiThemeDefinition)};
     case '--eclipse':
-      return {name: 'eclipse', template: githubTemplate(dokiThemeDefinition)};
+      return {name: 'eclipse', template: eclipseTemplate(dokiThemeDefinition)};
     case '--jupyter':
       return {name: 'jupyter', template: jupyterTemplate(dokiThemeDefinition)};
     case '--home':
