@@ -186,7 +186,9 @@ function getExistingAppDefinition(appTemplateDefinition: string) {
 
   return {}
 }
-
+function isCustomDefinition(dokiFilePath: string): boolean {
+  return dokiFilePath.endsWith(".custom.master.definition.json");
+}
 
 function run() {
   if (!hasExecutedScript()) return;
@@ -196,7 +198,9 @@ function run() {
       const themeDirectory = getThemeDirectoryPath(appArg);
       dokiThemes.forEach((dokiTheme) => {
         const {dokiFileDefinitionPath, dokiThemeDefinition} = dokiTheme;
-
+        if (isCustomDefinition(dokiFileDefinitionPath)) {
+          return;
+        }
         const destinationPath = dokiFileDefinitionPath.substring(
           masterThemeDefinitionDirectoryPath.length
         );

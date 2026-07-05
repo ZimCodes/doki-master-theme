@@ -7,6 +7,7 @@ import url from "node:url"
 
 const __filename = url.fileURLToPath(import.meta.url);
 const DARCULA = ".darcula";
+const CUSTOM = ".custom";
 
 function hasExecutedScript(): boolean {
   try {
@@ -14,10 +15,6 @@ function hasExecutedScript(): boolean {
   } catch (e) {
     return false;
   }
-}
-
-function getCustomJetbrainsDefinitionDir() {
-  return path.resolve(masterThemesDirectory, "jetbrains");
 }
 
 function getDokiThemeDirectory() {
@@ -30,9 +27,13 @@ function getDokiThemeDirectory() {
   );
 }
 
-function updateFileID(path: string, themeDefinition) {
-  themeDefinition.id = randomUUID();
-  fs.writeFileSync(path, JSON.stringify(themeDefinition))
+function updateFileID(path: string, themeDefinition,variantName:string) {
+  const customTagID =  `${noDot(CUSTOM)}-${noDot(variantName)}`;
+  if (themeDefinition.id.endsWith(customTagID)){
+    return;
+  }
+  themeDefinition.id = randomUUID() + `${noDot(CUSTOM)}-${noDot(variantName)}`;
+  fs.writeFileSync(path, JSON.stringify(themeDefinition));
 }
 
 function isNotCustomDefinition(dokiFilePath: string): boolean {
@@ -52,21 +53,20 @@ function createFiles(paths: Array<string>, datas) {
   paths.forEach((path, i) => fs.writeFileSync(path, datas[i]));
 }
 
-function newId(id: string, variantType: string): string {
-  return variantType == DARCULA ? id : id + variantType.replace(".", "");
+function noDot(name: string): string {
+  return name.replace(".", "");
 }
 
-function addVariantTemplateToGeneratedTemplate(dokiThemeDirPath: string) {
-  const variantType = process.argv[2] ? `.${process.argv[2]}` : DARCULA;
+function addVariantTemplateToGeneratedTemplate(dokiThemeDirPath: string,variantName:string) {
   const dokiTemplateFiles = fs.readdirSync(dokiThemeDirPath)
-  const customDokiTemplateNames: Array<string> = dokiTemplateFiles.filter((fileName: string) => fileName.includes(".custom"));
-  const variantTemplateName: string = dokiTemplateFiles.filter((fileName: string) => fileName.includes(variantType))[0];
+  const customDokiTemplateNames: Array<string> = dokiTemplateFiles.filter((fileName: string) => fileName.includes(CUSTOM) && fileName.includes("!!!"));
+  const variantTemplateName: string = dokiTemplateFiles.find((fileName: string) => fileName.includes(variantName));
   const customDokiTemplateJSONList = customDokiTemplateNames.map(fileName => getJSONContent(path.join(dokiThemeDirPath, fileName)));
   const variantTemplateJSON = getJSONContent(path.join(dokiThemeDirPath, variantTemplateName));
   const newCustomDokiTemplateJSONStrList = customDokiTemplateJSONList.map(customTemplateJSON => {
-    return JSON.stringify({...variantTemplateJSON, id: newId(customTemplateJSON.id, variantType)});
+    return JSON.stringify({...variantTemplateJSON, id: customTemplateJSON.id});
   });
-  const newCustomDokiTemplateNames = customDokiTemplateNames.map(fileName => fileName.replace(".custom", variantType));
+  const newCustomDokiTemplateNames = customDokiTemplateNames.map(fileName => fileName.replace("!!!", ""));
   const newCustomDokiTemplateFullNames = newCustomDokiTemplateNames.map(fileName => path.join(dokiThemeDirPath, fileName));
   createFiles(newCustomDokiTemplateFullNames, newCustomDokiTemplateJSONStrList);
   deleteAll(customDokiTemplateNames.map(fileName => path.join(dokiThemeDirPath, fileName)))
@@ -74,7 +74,7 @@ function addVariantTemplateToGeneratedTemplate(dokiThemeDirPath: string) {
 
 function run() {
   if (!hasExecutedScript()) return;
-  console.log("Preparing to generate theme templates.");
+  console.log("Preparing to generate custom theme template!");
   walkAndBuildTemplates()
     .then((dokiThemes) => {
       const themeDirectory = getDokiThemeDirectory();
@@ -83,8 +83,8 @@ function run() {
         if (isNotCustomDefinition(dokiFileDefinitionPath)) {
           return;
         }
-
-        updateFileID(dokiFileDefinitionPath, dokiThemeDefinition)
+        const variantName = `.${process.argv[2]}` || DARCULA;
+        updateFileID(dokiFileDefinitionPath, dokiThemeDefinition,variantName)
         const destinationPath = dokiFileDefinitionPath.substring(
           masterThemeDefinitionDirectoryPath.length
         );
@@ -94,10 +94,7 @@ function run() {
         fs.mkdirSync(path.resolve(fullFilePath, ".."), {
           recursive: true,
         });
-        const customJetbrainsPath = path.join(getCustomJetbrainsDefinitionDir(),
-          path.basename(dokiFileDefinitionPath)).replace(".islands", "");
-
-        const dokiTemplateDefinitionPath = fullFilePath.replace(".master", ".jetbrains").replace(".islands", "");
+        const dokiTemplateDefinitionPath = fullFilePath.replace(".master", `.!!!${noDot(variantName)}.jetbrains`);
 
         const definitionAsString = JSON.stringify(
           {
@@ -107,19 +104,13 @@ function run() {
           2
         );
 
-        const dokiThemeDefinitionAsString = JSON.stringify(dokiThemeDefinition);
-
         // Place generated doki template -> doki-build-plugin/assets/themes
         fs.writeFileSync(dokiTemplateDefinitionPath, definitionAsString);
-        // Relocate new custom doki color theme to 'masterThemes/jetbrains'.
-        // NOTE: All custom new doki color themes belong there.
-        fs.writeFileSync(customJetbrainsPath, dokiThemeDefinitionAsString);
-        fs.rmSync(dokiFileDefinitionPath);
         const dir = path.dirname(dokiTemplateDefinitionPath);
-        addVariantTemplateToGeneratedTemplate(dir);
+        addVariantTemplateToGeneratedTemplate(dir,variantName);
       });
     }).then(() => {
-    console.log("Theme Template Generation Complete!");
+    console.log("Custom theme template generation complete!");
   });
 }
 
