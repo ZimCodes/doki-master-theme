@@ -72,6 +72,8 @@ function addVariantTemplateToGeneratedTemplate(dokiThemeDirPath: string,variantN
   deleteAll(customDokiTemplateNames.map(fileName => path.join(dokiThemeDirPath, fileName)))
 }
 
+// CustomJetbrainsTemplate.ts <variant>
+// <variant> = <empty> for darcula | islands
 function run() {
   if (!hasExecutedScript()) return;
   console.log("Preparing to generate custom theme template!");
