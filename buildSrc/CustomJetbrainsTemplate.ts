@@ -8,6 +8,7 @@ import url from "node:url"
 const __filename = url.fileURLToPath(import.meta.url);
 const DARCULA = ".darcula";
 const CUSTOM = ".custom";
+const JETBRAINS = "jetbrains";
 
 function hasExecutedScript(): boolean {
   try {
@@ -57,6 +58,24 @@ function noDot(name: string): string {
   return name.replace(".", "");
 }
 
+function removedJetbrainsDirPath(absolutePath:string):string {
+  const pathSplit = absolutePath.split(path.sep);
+  const sanitizedPath = pathSplit.filter(dirSection => dirSection !== JETBRAINS);
+  return sanitizedPath.join(path.sep)
+}
+function placeInJetbrainsDir(absolutePath:string): string {
+  const dirPath = path.dirname(absolutePath);
+  if (dirPath.endsWith(JETBRAINS)) {
+    return absolutePath;
+  }
+  const newPathDir = path.join(dirPath,JETBRAINS);
+  fs.mkdirSync(newPathDir);
+  const newPath = path.join(newPathDir,path.basename(absolutePath));
+  fs.copyFileSync(absolutePath,newPath);
+  deleteAll([absolutePath]);
+  return newPath;
+}
+
 function addVariantTemplateToGeneratedTemplate(dokiThemeDirPath: string,variantName:string) {
   const dokiTemplateFiles = fs.readdirSync(dokiThemeDirPath)
   const customDokiTemplateNames: Array<string> = dokiTemplateFiles.filter((fileName: string) => fileName.includes(CUSTOM) && fileName.includes("!!!"));
@@ -85,13 +104,14 @@ function run() {
         if (isNotCustomDefinition(dokiFileDefinitionPath)) {
           return;
         }
-        const variantName = `.${process.argv[2]}` || DARCULA;
-        updateFileID(dokiFileDefinitionPath, dokiThemeDefinition,variantName)
-        const destinationPath = dokiFileDefinitionPath.substring(
+        const newDokiFileDefinitionPath = placeInJetbrainsDir(dokiFileDefinitionPath);
+        const variantName = process.argv[2] ? `.${process.argv[2]}` : DARCULA;
+        updateFileID(newDokiFileDefinitionPath, dokiThemeDefinition,variantName)
+        const destinationPath = newDokiFileDefinitionPath.substring(
           masterThemeDefinitionDirectoryPath.length
         );
         const essentials = jetbrainsTemplate(dokiThemeDefinition)
-        const fullFilePath = path.join(themeDirectory, destinationPath);
+        const fullFilePath = path.join(themeDirectory, removedJetbrainsDirPath(destinationPath));
 
         fs.mkdirSync(path.resolve(fullFilePath, ".."), {
           recursive: true,
