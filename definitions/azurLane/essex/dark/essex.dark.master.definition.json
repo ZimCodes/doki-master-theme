@@ -60,6 +60,7 @@
     "popupMask": "#928d8d05",
     "codeBlock": "#3B1414",
     "foldedTextBackground": "#00274e",
+    "mainWindowBackground":"#002d57",
     "textEditorBackground": "#001d39",
     "errorColor": "#ff0505",
     "constantColor": "#78DBEF",
