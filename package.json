@@ -1,6 +1,6 @@
 {
   "name": "doki-master-theme",
-  "packageManager": "yarn@4.17.0",
+  "packageManager": "yarn@4.17.1",
   "private": true,
   "workspaces": [
     "doki-build-source/",
@@ -12,15 +12,11 @@
     "buildDokiSrc": "yarn workspace doki-build-source build",
     "generateIconsTemplates": "yarn workspace master-theme-build generateIconsTemplates",
     "generateJetbrainsTemplates": "yarn workspace master-theme-build generateJetbrainsTemplates",
-    "generateAssets": "yarn workspace master-theme-build generateAssets",
     "generateColors": "yarn workspace master-theme-build generateColors",
-    "generateSmolAssets": "yarn workspace master-theme-build generateSmolAssets",
     "modifyThemes": "yarn workspace master-theme-build modifyThemes",
-    "cleanAssets": "yarn workspace master-theme-build cleanAssets",
-    "cleanTemplates": "yarn workspace master-theme-build cleanTemplates",
     "generateAllIcons": "yarn generateIconsTemplates && yarn generateColors",
-    "generateAllJetbrains": "yarn generateJetbrainsTemplates && yarn generateColors && yarn generateSmolAssets",
-    "generateAllJetbrainsAndIcons": "yarn generateJetbrainsTemplates && yarn generateIconsTemplates && yarn generateColors && yarn generateSmolAssets",
+    "generateAllJetbrains": "yarn generateJetbrainsTemplates && yarn generateColors",
+    "generateAllJetbrainsAndIcons": "yarn generateJetbrainsTemplates && yarn generateIconsTemplates && yarn generateColors",
     "generateCustomJetbrainsTemplate": "yarn workspace master-theme-build generateCustomJetbrainsTemplates"
   }
 }

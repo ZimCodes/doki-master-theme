@@ -11,19 +11,13 @@
     "generateIconsTemplates": "yarn dlx tsx AppThemeTemplateGenerator.ts --icons",
     "generateJetbrainsTemplates": "yarn dlx tsx AppThemeTemplateGenerator.ts",
     "generateCustomJetbrainsTemplates": "yarn dlx tsx CustomJetbrainsTemplate.ts",
-    "generateAssets": "yarn dlx tsx AssetGenerator.ts",
-    "generateSmolAssets": "yarn dlx tsx AssetGenerator.ts --smol",
     "generateColors": "yarn dlx tsx ColorGenerator.ts",
-    "modifyThemes": "yarn dlx tsx MasterModifier.ts",
-    "cleanAssets": "rimraf ../../../doki-theme-assets",
-    "cleanTemplates": "rimraf ../buildSrc"
+    "modifyThemes": "yarn dlx tsx MasterModifier.ts"
   },
   "devDependencies": {
-    "@types/node": "^26.1.0",
+    "@types/node": "^26.1.1",
     "doki-build-source": "workspace:*",
-    "rimraf": "^6.1.3",
-    "sharp": "^0.35.3",
     "typescript": "^6.0.3"
   },
-  "packageManager": "yarn@4.17.0"
+  "packageManager": "yarn@4.17.1"
 }
