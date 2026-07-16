@@ -14,7 +14,6 @@
     "generateJetbrainsTemplates": "yarn workspace master-theme-build generateJetbrainsTemplates",
     "generateColors": "yarn workspace master-theme-build generateColors",
     "modifyThemes": "yarn workspace master-theme-build modifyThemes",
-    "generateAllIcons": "yarn generateIconsTemplates && yarn generateColors",
     "generateAllJetbrains": "yarn generateJetbrainsTemplates && yarn generateColors",
     "generateAllJetbrainsAndIcons": "yarn generateJetbrainsTemplates && yarn generateIconsTemplates && yarn generateColors",
     "generateCustomJetbrainsTemplate": "yarn workspace master-theme-build generateCustomJetbrainsTemplates"

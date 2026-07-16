@@ -25,73 +25,8 @@ export const jetbrainsTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition
   ui: {},
 });
 
-const vsCodeTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  id: dokiThemeDefinition.id,
-  overrides: {},
-  laf: {},
-  syntax: {},
-  colors: {},
-});
-
-const visualStudioTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  id: dokiThemeDefinition.id,
-  overrides: {},
-  laf: {},
-  syntax: {},
-  colors: {},
-});
-
-const chromeTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  id: dokiThemeDefinition.id,
-  overrides: {},
-  laf: {},
-  syntax: {},
-  colors: {},
-});
-
-const firefoxTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  id: dokiThemeDefinition.id,
-  overrides: {},
-  laf: {},
-  syntax: {},
-  colors: {},
-});
-
-
-const vimTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  id: dokiThemeDefinition.id,
-  overrides: {},
-  laf: {},
-  syntax: {},
-  colors: {},
-});
-
 const hyperTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
   id: dokiThemeDefinition.id,
-});
-
-const githubTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  id: dokiThemeDefinition.id,
-  overrides: {},
-  laf: {},
-  syntax: {},
-  colors: {},
-});
-
-const eclipseTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  id: dokiThemeDefinition.id,
-  overrides: {},
-  laf: {},
-  syntax: {},
-  colors: {},
-});
-
-const jupyterTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
-  id: dokiThemeDefinition.id,
-  overrides: {},
-  laf: {},
-  syntax: {},
-  colors: {},
 });
 
 const iconsTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
@@ -106,6 +41,13 @@ const homeTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
   content: {},
 });
 
+const commonTemplate = (dokiThemeDefinition: MasterDokiThemeDefinition) => ({
+  id: dokiThemeDefinition.id,
+  overrides: {},
+  laf: {},
+  syntax: {},
+  colors: {},
+});
 
 /*********************************************************************************************/
 
@@ -124,32 +66,32 @@ function buildApplicationTemplate(appArg: string, dokiThemeDefinition: MasterDok
     case '--icons':
       return {name: 'icons', template: iconsTemplate(dokiThemeDefinition)};
     case '--vscode':
-      return {name: 'vsCode', template: vsCodeTemplate(dokiThemeDefinition)};
+      return {name: 'vsCode', template: commonTemplate(dokiThemeDefinition)};
     case '--hyper':
       return {name: 'hyper', template: hyperTemplate(dokiThemeDefinition)};
     case '--chrome':
-      return {name: 'chrome', template: chromeTemplate(dokiThemeDefinition)};
+      return {name: 'chrome', template: commonTemplate(dokiThemeDefinition)};
     case '--vim':
-      return {name: 'vim', template: vimTemplate(dokiThemeDefinition)};
+      return {name: 'vim', template: commonTemplate(dokiThemeDefinition)};
     case '--github':
-      return {name: 'github', template: githubTemplate(dokiThemeDefinition)};
+      return {name: 'github', template: commonTemplate(dokiThemeDefinition)};
     case '--eclipse':
-      return {name: 'eclipse', template: eclipseTemplate(dokiThemeDefinition)};
+      return {name: 'eclipse', template: commonTemplate(dokiThemeDefinition)};
     case '--jupyter':
-      return {name: 'jupyter', template: jupyterTemplate(dokiThemeDefinition)};
+      return {name: 'jupyter', template: commonTemplate(dokiThemeDefinition)};
     case '--home':
       return {name: 'home', template: homeTemplate(dokiThemeDefinition)};
     case '--vsstudio':
-      return {name: 'visualstudio', template: visualStudioTemplate(dokiThemeDefinition)};
+      return {name: 'visualstudio', template: commonTemplate(dokiThemeDefinition)};
     case '--firefox':
-      return {name: 'firefox', template: firefoxTemplate(dokiThemeDefinition)};
+      return {name: 'firefox', template: commonTemplate(dokiThemeDefinition)};
     default:
       return {name: 'jetbrains', template: jetbrainsTemplate(dokiThemeDefinition)};
   }
 }
 
 /**
- * You also want to change this as well
+ * NOTE: Possible CLI command option: '--<app-name>'
  *  jetbrains | vsCode | hyper | chrome | vim | github | eclipse | jupyter | home | visualstudio | firefox | icons
  */
 const appArg = process.argv[2];
@@ -186,6 +128,7 @@ function getExistingAppDefinition(appTemplateDefinition: string) {
 
   return {}
 }
+
 function isCustomDefinition(dokiFilePath: string): boolean {
   return dokiFilePath.endsWith(".custom.master.definition.json");
 }
