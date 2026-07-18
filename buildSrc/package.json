@@ -10,7 +10,8 @@
   "scripts": {
     "generateIconsTemplates": "yarn dlx tsx AppThemeTemplateGenerator.ts --icons",
     "generateJetbrainsTemplates": "yarn dlx tsx AppThemeTemplateGenerator.ts",
-    "generateCustomJetbrainsTemplates": "yarn dlx tsx CustomJetbrainsTemplate.ts",
+    "generateCustomJetbrainsTemplates": "yarn dlx tsx CustomTemplate.ts",
+    "generateCustomIconsTemplates": "yarn dlx tsx CustomTemplate.ts icons",
     "generateColors": "yarn dlx tsx ColorGenerator.ts",
     "modifyThemes": "yarn dlx tsx MasterModifier.ts"
   },

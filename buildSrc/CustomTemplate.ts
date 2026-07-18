@@ -9,6 +9,7 @@ const __filename = url.fileURLToPath(import.meta.url);
 const DARCULA = ".darcula";
 const CUSTOM = ".custom";
 const JETBRAINS = "jetbrains";
+const ICONS = ".icons"
 
 function hasExecutedScript(): boolean {
   try {
@@ -28,9 +29,9 @@ function getDokiThemeDirectory() {
   );
 }
 
-function updateFileID(path: string, themeDefinition,variantName:string) {
-  const customTagID =  `${noDot(CUSTOM)}-${noDot(variantName)}`;
-  if (themeDefinition.id.endsWith(customTagID)){
+function updateFileID(path: string, themeDefinition, variantName: string) {
+  const customTagID = `${noDot(CUSTOM)}-${noDot(variantName)}`;
+  if (themeDefinition.id.endsWith(customTagID)) {
     return;
   }
   themeDefinition.id = randomUUID() + `${noDot(CUSTOM)}-${noDot(variantName)}`;
@@ -58,25 +59,26 @@ function noDot(name: string): string {
   return name.replace(".", "");
 }
 
-function removedJetbrainsDirPath(absolutePath:string):string {
+function removedJetbrainsDirPath(absolutePath: string): string {
   const pathSplit = absolutePath.split(path.sep);
   const sanitizedPath = pathSplit.filter(dirSection => dirSection !== JETBRAINS);
   return sanitizedPath.join(path.sep)
 }
-function placeInJetbrainsDir(absolutePath:string): string {
+
+function placeInJetbrainsDir(absolutePath: string): string {
   const dirPath = path.dirname(absolutePath);
   if (dirPath.endsWith(JETBRAINS)) {
     return absolutePath;
   }
-  const newPathDir = path.join(dirPath,JETBRAINS);
+  const newPathDir = path.join(dirPath, JETBRAINS);
   fs.mkdirSync(newPathDir);
-  const newPath = path.join(newPathDir,path.basename(absolutePath));
-  fs.copyFileSync(absolutePath,newPath);
+  const newPath = path.join(newPathDir, path.basename(absolutePath));
+  fs.copyFileSync(absolutePath, newPath);
   deleteAll([absolutePath]);
   return newPath;
 }
 
-function addVariantTemplateToGeneratedTemplate(dokiThemeDirPath: string,variantName:string) {
+function addVariantTemplateToGeneratedTemplate(dokiThemeDirPath: string, variantName: string) {
   const dokiTemplateFiles = fs.readdirSync(dokiThemeDirPath)
   const customDokiTemplateNames: Array<string> = dokiTemplateFiles.filter((fileName: string) => fileName.includes(CUSTOM) && fileName.includes("!!!"));
   const variantTemplateName: string = dokiTemplateFiles.find((fileName: string) => fileName.includes(variantName));
@@ -91,8 +93,17 @@ function addVariantTemplateToGeneratedTemplate(dokiThemeDirPath: string,variantN
   deleteAll(customDokiTemplateNames.map(fileName => path.join(dokiThemeDirPath, fileName)))
 }
 
-// CustomJetbrainsTemplate.ts <variant>
-// <variant> = <empty> for darcula | islands
+function getMarkedTemplateName(variantName: string): string {
+  switch (variantName) {
+    case ICONS:
+      return `.!!!${noDot(variantName)}`;
+    default:
+      return `.!!!${noDot(variantName)}.jetbrains`;
+  }
+}
+
+// CustomTemplate.ts <variant>
+// <variant> = <empty> for darcula | islands | icons
 function run() {
   if (!hasExecutedScript()) return;
   console.log("Preparing to generate custom theme template!");
@@ -106,7 +117,7 @@ function run() {
         }
         const newDokiFileDefinitionPath = placeInJetbrainsDir(dokiFileDefinitionPath);
         const variantName = process.argv[2] ? `.${process.argv[2]}` : DARCULA;
-        updateFileID(newDokiFileDefinitionPath, dokiThemeDefinition,variantName)
+        updateFileID(newDokiFileDefinitionPath, dokiThemeDefinition, variantName)
         const destinationPath = newDokiFileDefinitionPath.substring(
           masterThemeDefinitionDirectoryPath.length
         );
@@ -116,7 +127,7 @@ function run() {
         fs.mkdirSync(path.resolve(fullFilePath, ".."), {
           recursive: true,
         });
-        const dokiTemplateDefinitionPath = fullFilePath.replace(".master", `.!!!${noDot(variantName)}.jetbrains`);
+        const dokiTemplateDefinitionPath = fullFilePath.replace(".master", getMarkedTemplateName(variantName));
 
         const definitionAsString = JSON.stringify(
           {
@@ -129,7 +140,7 @@ function run() {
         // Place generated doki template -> doki-build-plugin/assets/themes
         fs.writeFileSync(dokiTemplateDefinitionPath, definitionAsString);
         const dir = path.dirname(dokiTemplateDefinitionPath);
-        addVariantTemplateToGeneratedTemplate(dir,variantName);
+        addVariantTemplateToGeneratedTemplate(dir, variantName);
       });
     }).then(() => {
     console.log("Custom theme template generation complete!");

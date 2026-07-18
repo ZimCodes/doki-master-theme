@@ -16,6 +16,7 @@
     "modifyThemes": "yarn workspace master-theme-build modifyThemes",
     "generateAllJetbrains": "yarn generateJetbrainsTemplates && yarn generateColors",
     "generateAllJetbrainsAndIcons": "yarn generateJetbrainsTemplates && yarn generateIconsTemplates && yarn generateColors",
-    "generateCustomJetbrainsTemplate": "yarn workspace master-theme-build generateCustomJetbrainsTemplates"
+    "generateCustomJetbrainsTemplate": "yarn workspace master-theme-build generateCustomJetbrainsTemplates",
+    "generateCustomIconsTemplate": "yarn workspace master-theme-build generateCustomIconsTemplates"
   }
 }
